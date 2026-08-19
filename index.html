@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LASSO Revenue Calendar — Q3–Q4 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..125,400..900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#121331; --cream:#FFF9EA; --gold:#FFC62F; --terra:#BE6C55; --sage:#B2B280;
+  --gold-soft:#FFF4D1; --terra-soft:#F4DDD4; --sage-soft:#EFEFE2;
+  --gold-deep:#C79000; --terra-deep:#8A3A2F; --sage-deep:#6E6E45;
+  --ink:#1F1F1F; --line:#E8E0CB; --white:#FFFFFF;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--cream);color:var(--ink);font-family:Inter,system-ui,sans-serif;font-size:14px}
+.wrap{max-width:1280px;margin:0 auto;padding:0 24px 80px}
+
+/* header */
+header{background:var(--navy);color:var(--cream);padding:28px 0 22px;margin-bottom:0}
+header .wrap{padding-bottom:0}
+.eyebrow{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:6px}
+h1{font-family:Archivo,sans-serif;font-variation-settings:'wdth' 115,'wght' 800;font-size:clamp(26px,4vw,40px);line-height:1.02;letter-spacing:-.01em}
+.sub{margin-top:8px;font-size:13px;color:#C9C6DE;max-width:640px}
+.headrow{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:16px}
+.stamp{font-family:'JetBrains Mono',monospace;font-size:11px;color:#8B89A6;text-align:right;line-height:1.7}
+.stamp b{color:var(--cream)}
+
+/* filter rail */
+.rail{position:sticky;top:0;z-index:40;background:var(--navy);padding:14px 0 16px;border-bottom:3px solid var(--gold)}
+.rail .wrap{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding-top:0;padding-bottom:0}
+.chip{font-family:Archivo,sans-serif;font-variation-settings:'wdth' 110,'wght' 700;font-size:13px;letter-spacing:.02em;
+  padding:7px 16px;border-radius:999px;border:1.5px solid #3A3B5C;background:transparent;color:#C9C6DE;cursor:pointer;transition:all .15s}
+.chip:hover{border-color:#6B6C8F;color:var(--cream)}
+.chip.on{background:var(--cream);color:var(--navy);border-color:var(--cream)}
+.chip .dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:7px;vertical-align:1px}
+.rail .note{margin-left:auto;font-size:11px;color:#8B89A6;font-style:italic}
+
+
+/* targets strip */
+.targets{background:var(--white);border-bottom:1px solid var(--line)}
+.tg-row{display:flex;flex-wrap:wrap;gap:10px 36px;align-items:center;padding-top:13px;padding-bottom:13px}
+.tg-cap{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;letter-spacing:.16em;color:var(--terra-deep);text-transform:uppercase;border-right:2px solid var(--gold);padding-right:20px}
+.tg{display:flex;flex-direction:column;gap:1px}
+.tg-num{font-family:Archivo,sans-serif;font-variation-settings:'wdth' 112,'wght' 800;font-size:19px;color:var(--navy);line-height:1.1}
+.tg-num i{font-style:normal;font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;color:#9a927b;letter-spacing:.08em}
+.tg-lab{font-size:10.5px;color:#8a8470}
+@media(max-width:720px){.tg-row{gap:10px 22px}.tg-num{font-size:16px}}
+
+/* legend */
+.legend{display:flex;flex-wrap:wrap;gap:18px;padding:18px 0 6px;font-size:12px;color:#6b6552;align-items:center}
+.legend .key{display:flex;align-items:center;gap:6px}
+.bar-key{width:26px;height:10px;border-radius:3px}
+.dia-key{font-size:13px;font-weight:700}
+
+/* timeline */
+.panel{background:var(--white);border:1px solid var(--line);border-radius:14px;padding:0;margin-top:14px;overflow:hidden;box-shadow:0 1px 3px rgba(18,19,49,.05)}
+.panel-h{padding:18px 22px 14px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:8px}
+.panel-h h2{font-family:Archivo,sans-serif;font-variation-settings:'wdth' 112,'wght' 750;font-size:19px;color:var(--navy)}
+.panel-h .hint{font-size:12px;color:#8a8470}
+.tl-scroll{overflow-x:auto}
+.tl{min-width:1180px;position:relative}
+.tl-head{display:grid;grid-template-columns:260px 1fr;border-bottom:2px solid var(--navy);background:var(--cream)}
+.tl-head .cap{padding:10px 14px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--navy);align-self:end}
+.months{display:grid;grid-template-columns:repeat(26,1fr)}
+.mo{grid-row:1;font-family:Archivo,sans-serif;font-variation-settings:'wdth' 110,'wght' 700;font-size:12px;color:var(--navy);
+  padding:8px 0 2px 8px;border-left:1px solid var(--line)}
+.wks{display:grid;grid-template-columns:repeat(26,1fr);grid-column:1/-1}
+.wk{font-family:'JetBrains Mono',monospace;font-size:8.5px;color:#9a927b;padding:2px 0 6px 4px;border-left:1px dotted #EDE6D2}
+.strategy-band{display:grid;grid-template-columns:260px 1fr;background:var(--navy)}
+.strategy-band .lab{padding:7px 14px;color:var(--cream);font-family:Archivo,sans-serif;font-variation-settings:'wdth' 108,'wght' 650;font-size:12px;letter-spacing:.03em}
+.row{display:grid;grid-template-columns:260px 1fr;border-bottom:1px solid #F2ECD9;position:relative}
+.row:hover{background:#FFFDF4}
+.row .name{padding:8px 14px;font-size:12.5px;font-weight:600;color:var(--navy);display:flex;align-items:center;gap:6px}
+.row .name .tm{width:8px;height:8px;border-radius:2px;flex:none}
+.row.child .name{font-weight:400;font-style:italic;color:#6b6552;padding-left:30px;font-size:12px}
+.lanes{display:grid;grid-template-columns:repeat(26,1fr);position:relative;min-height:32px}
+.cell{border-left:1px dotted #F2ECD9}
+.bar{position:absolute;top:7px;height:16px;border-radius:8px;display:flex;align-items:center;min-width:14px;cursor:default}
+.bar .tag{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;color:var(--navy);padding-left:6px;white-space:nowrap;overflow:hidden}
+.dia{position:absolute;top:9px;width:12px;height:12px;transform:rotate(45deg);border-radius:2px;cursor:default}
+.tbd-pill{position:absolute;top:7px;left:8px;font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;
+  color:var(--terra-deep);border:1px dashed var(--terra-deep);border-radius:999px;padding:2px 8px;opacity:.85}
+.playhead{position:absolute;top:0;bottom:0;width:2px;background:var(--navy);z-index:5;pointer-events:none}
+.playhead::after{content:'TODAY';position:absolute;top:-1px;left:4px;font-family:'JetBrains Mono',monospace;
+  font-size:8px;font-weight:700;letter-spacing:.1em;color:var(--cream);background:var(--navy);padding:2px 5px;border-radius:0 4px 4px 0}
+.tip{position:fixed;z-index:99;background:var(--navy);color:var(--cream);border-radius:8px;padding:10px 13px;font-size:12px;
+  max-width:300px;pointer-events:none;opacity:0;transition:opacity .1s;box-shadow:0 6px 20px rgba(18,19,49,.35);line-height:1.5}
+.tip b{color:var(--gold)}
+
+/* needs dates strip */
+.flagstrip{margin-top:16px;background:#FDF3EF;border:1px solid #ECCFC4;border-radius:12px;padding:14px 18px}
+.flagstrip h3{font-family:Archivo,sans-serif;font-variation-settings:'wdth' 110,'wght' 700;font-size:13px;color:var(--terra-deep);letter-spacing:.04em;text-transform:uppercase;margin-bottom:8px}
+.flagstrip .items{display:flex;flex-wrap:wrap;gap:6px}
+.flagstrip .fpill{font-size:11.5px;background:var(--white);border:1px solid #ECCFC4;border-radius:999px;padding:4px 11px;color:#7a4437}
+.flagstrip .fpill b{font-weight:600}
+
+/* cards */
+.cards-h{margin:34px 0 4px;display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:8px}
+.cards-h h2{font-family:Archivo,sans-serif;font-variation-settings:'wdth' 112,'wght' 750;font-size:19px;color:var(--navy)}
+.cards-h .hint{font-size:12px;color:#8a8470}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:14px;margin-top:12px}
+.card{background:var(--white);border:1px solid var(--line);border-left-width:5px;border-radius:12px;padding:16px 18px;display:flex;flex-direction:column;gap:10px}
+.card .top{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+.card h4{font-family:Archivo,sans-serif;font-variation-settings:'wdth' 108,'wght' 700;font-size:15.5px;color:var(--navy);line-height:1.25}
+.badge{font-family:'JetBrains Mono',monospace;font-size:9.5px;font-weight:700;letter-spacing:.08em;padding:3px 9px;border-radius:999px;white-space:nowrap}
+.meta{font-family:'JetBrains Mono',monospace;font-size:10.5px;color:#8a8470;display:flex;flex-wrap:wrap;gap:4px 14px}
+.meta b{color:var(--navy);font-weight:700}
+.meta .motion{color:#b0a88e}
+.info{display:inline-block;font-size:12px;color:#b0a88e;cursor:help;margin-left:2px;vertical-align:1px}
+.info:hover{color:var(--navy)}
+.name-i{font-size:10px;color:#c9c1a6;margin-left:4px}
+.badge-group{display:flex;gap:6px;align-items:center;flex:none}
+.status-pill{font-family:'JetBrains Mono',monospace;font-size:9.5px;font-weight:700;letter-spacing:.08em;padding:3px 9px;border-radius:999px;background:#E3EDF7;color:#2F6DB5;border:1px solid #C7DAEE;white-space:nowrap}
+.tps{border-top:1px dashed var(--line);padding-top:9px;display:flex;flex-direction:column;gap:4px}
+.tp{font-size:12px;color:#4a4638;display:flex;gap:8px;align-items:baseline}
+.tp .d{transform:rotate(45deg);width:7px;height:7px;border-radius:1px;flex:none;position:relative;top:-1px}
+.tp .when{font-family:'JetBrains Mono',monospace;font-size:10px;color:#9a927b;margin-left:auto;white-space:nowrap}
+.invs{display:flex;flex-wrap:wrap;gap:6px}
+.inv{font-size:11px;border-radius:7px;padding:4px 9px;display:flex;gap:6px;align-items:center;font-weight:500}
+.inv.action{background:var(--navy);color:var(--cream)}
+.inv.action .who{color:var(--gold)}
+.inv.fyi{background:#F4F1E4;color:#5c563f;border:1px solid var(--line)}
+.inv .who{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;letter-spacing:.06em}
+.card .foot{margin-top:auto;display:flex;justify-content:space-between;align-items:center;padding-top:4px}
+.brief{font-size:12px;font-weight:600;color:var(--navy);text-decoration:none;border:1.5px solid var(--navy);border-radius:8px;padding:5px 12px;transition:all .15s}
+.brief:hover{background:var(--navy);color:var(--cream)}
+.brief.none{border-style:dashed;color:#b0a88e;border-color:#DDD4B8;pointer-events:none}
+.notes{font-size:12px;color:#6b6552;line-height:1.5}
+
+
+/* team-tab calendar grid */
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:1px;background:#F2ECD9;border-top:1px solid #F2ECD9}
+.cal-dow{background:var(--cream);font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;letter-spacing:.12em;color:#9a927b;padding:6px 8px;text-align:center}
+.cal-day{background:var(--white);min-height:92px;padding:6px 7px;display:flex;flex-direction:column;gap:4px}
+.cal-day.cal-past{background:#FBF8EE}
+.cal-day.cal-past .cal-chip{opacity:.45}
+.cal-day.cal-today{outline:2px solid var(--gold);outline-offset:-2px}
+.cal-num{font-family:'JetBrains Mono',monospace;font-size:9.5px;font-weight:700;color:#9a927b}
+.cal-today .cal-num{color:var(--gold-deep)}
+.cal-chip{font-size:10.5px;line-height:1.25;background:#FBF9F0;border-radius:5px;padding:4px 6px;color:var(--navy);font-weight:600;overflow:hidden}
+.cal-chip .cal-sub{display:block;font-weight:400;font-size:9.5px;color:#8a8470;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cal-chip.act{background:var(--navy);color:var(--cream)}
+.cal-chip.act .cal-sub{color:#C9C6DE}
+@media(max-width:820px){.cal-grid{grid-template-columns:repeat(7,minmax(90px,1fr));overflow-x:auto}}
+
+/* up next agenda */
+.upnext{margin-top:14px}
+.panel + .panel{margin-top:16px}
+.agenda{display:flex;flex-direction:column}
+.ag-row{display:grid;grid-template-columns:110px 1fr auto;gap:14px;align-items:center;padding:11px 22px;border-bottom:1px solid #F2ECD9}
+.ag-row:last-child{border-bottom:none}
+.ag-row.today-row{background:var(--gold-soft)}
+.ag-date{font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;color:var(--navy)}
+.ag-date .dow{display:block;font-size:9px;font-weight:500;color:#9a927b;letter-spacing:.1em}
+.ag-what{font-size:13px;color:var(--ink)}
+.ag-what b{color:var(--navy)}
+.ag-what .of{color:#8a8470;font-size:12px}
+.ag-tags{display:flex;gap:6px;align-items:center}
+.ag-team{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;letter-spacing:.08em;padding:3px 8px;border-radius:999px}
+.ag-act{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;letter-spacing:.06em;background:var(--navy);color:var(--gold);padding:3px 8px;border-radius:999px}
+.ag-empty{padding:22px;font-size:13px;color:#8a8470;font-style:italic}
+
+.proto{margin-top:40px;font-size:11.5px;color:#9a927b;border-top:1px solid var(--line);padding-top:14px;line-height:1.7}
+.proto b{color:var(--terra-deep)}
+@media (prefers-reduced-motion: reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap headrow">
+    <div>
+      <div class="eyebrow">Run of Show · Revenue Team</div>
+      <h1>Revenue Calendar</h1>
+      <div class="sub">Every revenue campaign, touchpoint, and team ask across Marketing, Sales, and CS — Q3–Q4 2026. Filter to your team to see what's yours and what needs you.</div>
+    </div>
+    <div class="stamp">SOURCE <b>Plan Data (OneDrive)</b><br>REFRESHED <b>AUG 19 2026</b><br>OWNER <b>REVOPS · SHONNA</b></div>
+  </div>
+</header>
+<div class="rail"><div class="wrap">
+  <button class="chip on" data-team="All">All teams</button>
+  <button class="chip" data-team="Marketing"><span class="dot" style="background:var(--gold)"></span>Marketing</button>
+  <button class="chip" data-team="Sales"><span class="dot" style="background:var(--terra)"></span>Sales</button>
+  <button class="chip" data-team="CS"><span class="dot" style="background:var(--sage)"></span>CS</button>
+  <span class="note">Team views include campaigns that need you, not just ones you own</span>
+</div></div>
+
+
+<div class="targets"><div class="wrap tg-row">
+  <span class="tg-cap">Q3 Targets</span>
+  <span class="tg"><span class="tg-num">$338.1K <i>AUG</i> &middot; $1.12M <i>Q3</i></span><span class="tg-lab">Revenue / Bookings &middot; month / quarter</span></span>
+  <span class="tg"><span class="tg-num">125 <i>MKTG</i> &middot; 100 <i>SALES</i></span><span class="tg-lab">Qualified demos completed &middot; New Business</span></span>
+  <span class="tg"><span class="tg-num">190</span><span class="tg-lab">Demos scheduled &middot; Marketing</span></span>
+  <span class="tg"><span class="tg-num">25</span><span class="tg-lab">Shoflo cross-sell demos scheduled</span></span>
+</div></div>
+
+<div class="wrap">
+  <div class="legend">
+    <span class="key"><span class="bar-key" style="background:var(--gold)"></span>Marketing</span>
+    <span class="key"><span class="bar-key" style="background:var(--terra)"></span>Sales</span>
+    <span class="key"><span class="bar-key" style="background:var(--sage)"></span>CS</span>
+    <span class="key"><span class="dia-key" style="color:var(--gold-deep)">◆</span>Touchpoint / milestone</span>
+    <span class="key" style="color:var(--terra-deep)">▢ TBD = dates owed</span>
+  </div>
+
+
+  <div class="panel upnext">
+    <div class="panel-h"><h2>Up next · 14 days</h2><span class="hint" id="agendaHint">Launches, sends, and wraps in the next 14 days</span></div>
+    <div class="agenda" id="agenda"></div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-h"><h2>Timeline</h2><span class="hint">Hover any bar or diamond for detail · grouped by strategy</span></div>
+    <div class="tl-scroll"><div class="tl" id="tl"></div></div>
+  </div>
+
+  <div class="flagstrip" id="flags"></div>
+
+  <div class="cards-h"><h2>Campaign briefs & asks</h2><span class="hint">◆ touchpoints · dark tag = action needed · light tag = for awareness</span></div>
+  <div class="cards" id="cards"></div>
+
+  <div class="proto"><b>Notes:</b> Action/FYI tags read live from the Asks column in Plan Data (format: ROLE: Action or FYI — what · when). Brief links render once URLs are added to the Brief/Links column. This page regenerates from the Excel — refresh cadence: weekday mornings once scheduled.</div>
+</div>
+<div class="tip" id="tip"></div>
+
+<script>
+const DATA = [{"team": "Marketing", "strategy": "LASSO Intelligence Revenue", "name": "LASSO Intelligence Power Users", "child": false, "start": "2026-07-28", "end": "2026-08-25", "motion": "Expansion", "channel": "Email,  Direct Mail and AE outreach", "notes": "", "type": "Campaign", "status": "Live", "target": "", "link": "", "desc": "2-week trial aimed at existing Platform power users identified in Pendo; goal is to convert these users into expansion opps for LASSO Intelligence", "inv": [{"team": "CS", "role": "CSM", "kind": "action", "label": "outreach to trial accounts 8/11"}, {"team": "Sales", "role": "AE", "kind": "action", "label": "outreach to trial accounts 8/11 and 8/14"}], "children": [{"team": "Marketing", "strategy": "LASSO Intelligence Revenue", "name": "\u21b3 Survey email 1 send", "child": true, "start": "2026-07-28", "end": null, "motion": "Expansion", "channel": "", "notes": "", "type": "Milestone", "status": "Complete", "target": "", "link": "", "desc": "", "inv": []}, {"team": "Marketing", "strategy": "LASSO Intelligence Revenue", "name": "\u21b3 Direct Mail Kits send", "child": true, "start": "2026-08-05", "end": null, "motion": "Expansion", "channel": "", "notes": "", "type": "Milestone", "status": "Complete", "target": "", "link": "", "desc": "", "inv": []}, {"team": "Sales", "strategy": "LASSO Intelligence Revenue", "name": "\u21b3 AE outreach to first 4 trials ending", "child": true, "start": "2026-08-11", "end": null, "motion": "Expansion", "channel": "", "notes": "", "type": "Milestone", "status": "Complete", "target": "", "link": "", "desc": "", "inv": []}, {"team": "Marketing", "strategy": "LASSO Intelligence Revenue", "name": "\u21b3 Follow up email to non-responders", "child": true, "start": "2026-08-13", "end": null, "motion": "Expansion", "channel": "", "notes": "", "type": "Milestone", "status": "Complete", "target": "", "link": "", "desc": "", "inv": []}, {"team": "Sales", "strategy": "LASSO Intelligence Revenue", "name": "\u21b3 AE outreach to next 3 trials ending", "child": true, "start": "2026-08-14", "end": null, "motion": "Expansion", "channel": "", "notes": "", "type": "Milestone", "status": "Complete", "target": "", "link": "", "desc": "", "inv": []}, {"team": "Marketing", "strategy": "LASSO Intelligence Revenue", "name": "\u21b3 AE handoff and continued outreach", "child": true, "start": "2026-08-18", "end": null, "motion": "Expansion", "channel": "", "notes": "", "type": "Milestone", "status": "Live", "target": "", "link": "", "desc": "", "inv": []}]}, {"team": "Marketing", "strategy": "LASSO Intelligence Revenue", "name": "LI General Campaign", "child": false, "start": "2026-08-05", "end": null, "motion": "New Business", "channel": "Emails, Ads, Website Content", "notes": "Ongoing brand campaign", "type": "Campaign", "status": "Building", "target": "", "link": "https://docs.google.com/document/d/1DQObIH2m39LcBi5oGLBtgEcMTJf_qjvKk3bz8VlWD0Y/edit?usp=sharing", "desc": "Ongoing brand update campaign to include LASSO Intelligence into messaging and content; will run to help position website 2.0 launch, informing our overall brand positioning with Intelligence at the forefront.", "inv": [], "children": [{"team": "Marketing", "strategy": "Shoflo Revenue Expansion", "name": "\u21b3 Prospect newsletter", "child": true, "start": null, "end": null, "motion": "New Business", "channel": "", "notes": "", "type": "Milestone", "status": "", "target": "", "link": "", "desc": "", "inv": [{"team": "Sales", "role": "SDR", "kind": "fyi", "label": "prospect comms TBD"}]}, {"team": "Marketing", "strategy": "Shoflo Revenue Expansion", "name": "\u21b3 Customer-base distro", "child": true, "start": null, "end": null, "motion": "New Business", "channel": "Email + pendo", "notes": "", "type": "Milestone", "status": "", "target": "", "link": "", "desc": "", "inv": [{"team": "CS", "role": "CS", "kind": "fyi", "label": "customer comms TBD"}]}]}, {"team": "Marketing", "strategy": "Shoflo Revenue Expansion", "name": "ABM - 5 Remaining NFL Teams", "child": false, "start": "2026-08-05", "end": "2026-09-18", "motion": "New Business", "channel": "Direct Mail, Mktg Drip, SDR calls", "notes": "", "type": "Campaign", "status": "Live", "target": "", "link": "https://docs.google.com/document/d/1aQ1PszWQ3mWGq21TSqEX3PFYQYpCp-hsGEnB6k_jAwM/edit?tab=t.0", "desc": "Targeting the remaining NFL market for Rundown via direct mail, email and sales outreach with a goal of 50% conversion to demos completed", "inv": [], "children": [{"team": "Marketing", "strategy": "Shoflo Revenue Expansion", "name": "\u21b3 Direct mail + Donuts delivery", "child": true, "start": "2026-08-05", "end": null, "motion": "New Business", "channel": "", "notes": "", "type": "Milestone", "status": "", "target": "", "link": "", "desc": "", "inv": []}, {"team": "Marketing", "strategy": "Shoflo Revenue Expansion", "name": "\u21b3 Email 1 - 28/32 teams; book demo", "child": true, "start": "2026-08-06", "end": null, "motion": "New Business", "channel": "", "notes": "", "type": "Milestone", "status": "", "target": "", "link": "", "desc": "", "inv": []}, {"team": "Marketing", "strategy": "Shoflo Revenue Expansion", "name": "\u21b3 Marketing email drip x6", "child": true, "start": "2026-08-12", "end": "2026-09-01", "motion": "New Business", "channel": "", "notes": "Rams + Saints case study, scouting report, product tour, 49ers podcast epidsode, team-specific LPs", "type": "Campaign", "status": "", "target": "", "link": "", "desc": "", "inv": []}, {"team": "Sales", "strategy": "Shoflo Revenue Expansion", "name": "\u21b3 SDR outreach starts", "child": true, "start": "2026-09-01", "end": "2026-09-18", "motion": "New Business", "channel": "", "notes": "Dave handling all follow up", "type": "Milestone", "status": "", "target": "", "link": "", "desc": "", "inv": [{"team": "Sales", "role": "SDR", "kind": "action", "label": "outreach starts 8/19"}]}]}, {"team": "Marketing", "strategy": "Demand Foundation", "name": "Change Management / Facing Your Fears", "child": false, "start": null, "end": null, "motion": "Pipe Acceleration", "channel": "Email, Social, Ads", "notes": "Paused", "type": "Campaign", "status": "On Hold", "target": "", "link": "", "desc": "", "inv": [], "children": []}, {"team": "Marketing", "strategy": "Shoflo Revenue Expansion", "name": "Rundown Migration Training - NFL", "child": false, "start": "2026-07-29", "end": "2026-07-29", "motion": "Expansion", "channel": "Email and Webinar", "notes": "", "type": "Campaign", "status": "Complete", "target": "", "link": "https://lassoio.sharepoint.com/:w:/s/LASSO/IQDzjadRZmZVRrQMCkqPJIKwAa9pcA3yOLtcXd-rAzDPDho?e=CUa9P5", "desc": "A recurring offseason program that trains sports league customers\u2019 game presentation crews on Rundown and GEM, scheduled about a month before each league\u2019s first home event so crews are show-ready, not scrambling.", "inv": [], "children": []}, {"team": "Marketing", "strategy": "Shoflo Revenue Expansion", "name": "Rundown Migration Training - NCAA Football", "child": false, "start": "2026-08-05", "end": "2026-08-05", "motion": "Expansion", "channel": "Email and Webinar", "notes": "", "type": "Campaign", "status": "Complete", "target": "", "link": "https://lassoio.sharepoint.com/:w:/s/LASSO/IQDzjadRZmZVRrQMCkqPJIKwAa9pcA3yOLtcXd-rAzDPDho?e=CUa9P5", "desc": "A recurring offseason program that trains sports league customers\u2019 game presentation crews on Rundown and GEM, scheduled about a month before each league\u2019s first home event so crews are show-ready, not scrambling.", "inv": [], "children": []}, {"team": "Marketing", "strategy": "Shoflo Revenue Expansion", "name": "Rundown Migration Training - NBA", "child": false, "start": "2026-09-02", "end": "2026-09-16", "motion": "Expansion", "channel": "Email and Webinar", "notes": "Webinar date 9/16", "type": "Campaign", "status": "Building", "target": "", "link": "https://lassoio.sharepoint.com/:w:/s/LASSO/IQDzjadRZmZVRrQMCkqPJIKwAa9pcA3yOLtcXd-rAzDPDho?e=CUa9P5", "desc": "A recurring offseason program that trains sports league customers\u2019 game presentation crews on Rundown and GEM, scheduled about a month before each league\u2019s first home event so crews are show-ready, not scrambling.", "inv": [], "children": [{"team": "Marketing", "strategy": "Shoflo Revenue Expansion", "name": "\u21b3 Email invite 1 send", "child": true, "start": "2026-09-02", "end": null, "motion": "Expansion", "channel": "", "notes": "", "type": "Milestone", "status": "", "target": "", "link": "", "desc": "", "inv": []}, {"team": "Marketing", "strategy": "Shoflo Revenue Expansion", "name": "\u21b3 Email invite 2 send", "child": true, "start": "2026-09-09", "end": null, "motion": "Expansion", "channel": "", "notes": "", "type": "Milestone", "status": "", "target": "", "link": "", "desc": "", "inv": []}, {"team": "Marketing", "strategy": "Shoflo Revenue Expansion", "name": "\u21b3 Email invite 3 send", "child": true, "start": "2026-09-14", "end": null, "motion": "Expansion", "channel": "", "notes": "", "type": "Milestone", "status": "", "target": "", "link": "", "desc": "", "inv": []}, {"team": "Marketing", "strategy": "Shoflo Revenue Expansion", "name": "\u21b3 Post-webinar recap", "child": true, "start": "2026-09-17", "end": null, "motion": "Expansion", "channel": "", "notes": "", "type": "Milestone", "status": "", "target": "", "link": "", "desc": "", "inv": []}]}, {"team": "Marketing", "strategy": "Shoflo Revenue Expansion", "name": "Rundown Migration Training - NHL", "child": false, "start": "2026-08-05", "end": "2026-09-23", "motion": "Expansion", "channel": "Email and Webinar", "notes": "Webinar date 9/23", "type": "Campaign", "status": "Live", "target": "", "link": "https://lassoio.sharepoint.com/:w:/s/LASSO/IQDzjadRZmZVRrQMCkqPJIKwAa9pcA3yOLtcXd-rAzDPDho?e=CUa9P5", "desc": "A recurring offseason program that trains sports league customers\u2019 game presentation crews on Rundown and GEM, scheduled about a month before each league\u2019s first home event so crews are show-ready, not scrambling.", "inv": [], "children": [{"team": "Marketing", "strategy": "Shoflo Revenue Expansion", "name": "\u21b3 Email invite 1 send", "child": true, "start": "2026-08-05", "end": null, "motion": "Expansion", "channel": "", "notes": "", "type": "Milestone", "status": "", "target": "", "link": "", "desc": "", "inv": []}, {"team": "Marketing", "strategy": "Shoflo Revenue Expansion", "name": "\u21b3 Email invite 2 send", "child": true, "start": "2026-08-12", "end": null, "motion": "Expansion", "channel": "", "notes": "", "type": "Milestone", "status": "", "target": "", "link": "", "desc": "", "inv": []}, {"team": "Marketing", "strategy": "Shoflo Revenue Expansion", "name": "\u21b3 Email invite 3 send", "child": true, "start": "2026-08-17", "end": null, "motion": "Expansion", "channel": "", "notes": "", "type": "Milestone", "status": "", "target": "", "link": "", "desc": "", "inv": []}, {"team": "Marketing", "strategy": "Shoflo Revenue Expansion", "name": "\u21b3 Post-webinar recap", "child": true, "start": "2026-08-20", "end": null, "motion": "Expansion", "channel": "", "notes": "", "type": "Milestone", "status": "", "target": "", "link": "", "desc": "", "inv": []}]}, {"team": "Marketing", "strategy": "LASSO Intelligence Revenue", "name": "2026 LDI @ LVCC", "child": false, "start": "2026-09-15", "end": "2026-12-08", "motion": "New Business", "channel": "Tradeshow", "notes": "Pre-show campaign through show dates", "type": "Campaign", "status": "Planned", "target": "", "link": "", "desc": "", "inv": [], "children": [{"team": "Marketing", "strategy": "LASSO Intelligence Revenue", "name": "\u21b3 Customer email", "child": true, "start": null, "end": null, "motion": "", "channel": "", "notes": "", "type": "Milestone", "status": "", "target": "", "link": "", "desc": "", "inv": []}, {"team": "Marketing", "strategy": "LASSO Intelligence Revenue", "name": "\u21b3 Sales outreach", "child": true, "start": null, "end": null, "motion": "", "channel": "", "notes": "", "type": "Milestone", "status": "", "target": "", "link": "", "desc": "", "inv": []}]}, {"team": "Marketing", "strategy": "Shoflo Revenue Expansion", "name": "Shoflo V2 All Sports", "child": false, "start": null, "end": null, "motion": "New Business", "channel": "Survey + Email, then SDR outreach", "notes": "Pending campaign brief creation to add", "type": "Campaign", "status": "Planned", "target": "", "link": "", "desc": "", "inv": [], "children": [{"team": "Marketing", "strategy": "Shoflo Revenue Expansion", "name": "\u21b3 Survey send (pendo pop-up)", "child": true, "start": null, "end": null, "motion": "", "channel": "", "notes": "", "type": "Campaign", "status": "", "target": "", "link": "", "desc": "", "inv": []}]}, {"team": "Marketing", "strategy": "Shoflo Revenue Expansion", "name": "Rundown Cross-Sell", "child": false, "start": "2026-08-05", "end": "2026-09-10", "motion": "Expansion", "channel": "Email + Survey, then SDR outreach", "notes": "Survey w/ $1,000 giveaway / 80 responses as of 8/13", "type": "Campaign", "status": "Live", "target": "", "link": "https://docs.google.com/document/d/1Bo-1-2AmM374jGUGGfjanV1iAE8G_meg0BVKHRZysE0/edit?usp=sharing", "desc": "Campaign to identify Rundown customers using other inventory or scheduling tools today (self-selected via survey), segment for targeted outreach and cross-sell into LASSO Platform.", "inv": [{"team": "Sales", "role": "SDR", "kind": "action", "label": "outreach starts 8/25"}, {"team": "CS", "role": "CSM", "kind": "fyi", "label": "expansion into Platform"}], "children": [{"team": "Marketing", "strategy": "Shoflo Revenue Expansion", "name": "\u21b3 Survey send (pendo pop-up)", "child": true, "start": "2026-08-05", "end": null, "motion": "Expansion", "channel": "", "notes": "", "type": "Milestone", "status": "", "target": "", "link": "", "desc": "", "inv": []}, {"team": "Marketing", "strategy": "Shoflo Revenue Expansion", "name": "\u21b3 Mktg email follow-up", "child": true, "start": "2026-08-13", "end": null, "motion": "Expansion", "channel": "", "notes": "", "type": "Milestone", "status": "", "target": "", "link": "", "desc": "", "inv": []}, {"team": "Marketing", "strategy": "Shoflo Revenue Expansion", "name": "\u21b3 Ad set launch + M&M case study", "child": true, "start": "2026-08-17", "end": null, "motion": "Expansion", "channel": "", "notes": "", "type": "Milestone", "status": "", "target": "", "link": "", "desc": "", "inv": []}, {"team": "Sales", "strategy": "Shoflo Revenue Expansion", "name": "\u21b3 SDR outreach starts", "child": true, "start": "2026-08-17", "end": "2026-08-31", "motion": "Expansion", "channel": "", "notes": "", "type": "Milestone", "status": "", "target": "", "link": "", "desc": "", "inv": [{"team": "Sales", "role": "SDR", "kind": "action", "label": "outreach starts 8/17"}]}, {"team": "Sales", "strategy": "Shoflo Revenue Expansion", "name": "\u21b3 Group demo", "child": true, "start": "2026-09-03", "end": null, "motion": "Expansion", "channel": "", "notes": "", "type": "Milestone", "status": "", "target": "", "link": "", "desc": "", "inv": []}, {"team": "Marketing", "strategy": "Shoflo Revenue Expansion", "name": "\u21b3 Group demo attendee/no-show email", "child": true, "start": "2026-09-03", "end": null, "motion": "Expansion", "channel": "", "notes": "", "type": "Milestone", "status": "", "target": "", "link": "", "desc": "", "inv": []}, {"team": "Sales", "strategy": "Shoflo Revenue Expansion", "name": "\u21b3 Post-group demo SDR outreach", "child": true, "start": "2026-09-07", "end": null, "motion": "Expansion", "channel": "", "notes": "", "type": "Milestone", "status": "", "target": "", "link": "", "desc": "", "inv": [{"team": "Sales", "role": "SDR", "kind": "action", "label": "post-group demo outreach starts 9/7"}]}]}, {"team": "Marketing", "strategy": "Shoflo Revenue Expansion", "name": "Closed-Lost Trial Conversion", "child": false, "start": "2026-08-24", "end": "2026-09-04", "motion": "New Business", "channel": "4-email drip with SDR call tasks", "notes": "279 accounts/358 contacts. Emails include Get demo CTA, rundown/pm product tours", "type": "Campaign", "status": "Building", "target": "", "link": "", "desc": "Targeting prospects that started a Shoflo Free Trial and never converted into a demo in an effort to expand Shoflo Revenue", "inv": [], "children": []}, {"team": "Marketing", "strategy": "Demand Foundation", "name": "Inventory Competitive Campaign", "child": false, "start": null, "end": null, "motion": "New Business", "channel": "Email drip and SDR calls", "notes": "Closed-lost re-engagement / net new on Flex, Rentman, CurrentRMS (AV Production) \u2014 8,700 not contacted", "type": "Campaign", "status": "Planned", "target": "", "link": "", "desc": "", "inv": [], "children": []}, {"team": "Marketing", "strategy": "Demand Foundation", "name": "AEO and New Website Launch", "child": false, "start": "2026-07-13", "end": "2026-10-15", "motion": "New Business", "channel": "Web", "notes": "", "type": "Campaign", "status": "Building", "target": "", "link": "", "desc": "", "inv": [], "children": []}, {"team": "Marketing", "strategy": "Customer Enablement", "name": "Customer Newsletter: August Releases", "child": false, "start": "2026-08-19", "end": "2026-08-19", "motion": "Expansion", "channel": "Customer email", "notes": "", "type": "Milestone", "status": "Complete", "target": "", "link": "https://hi.lasso.io/your-gear-your-data-your-layout?ecid=&utm_source=hs_email&utm_medium=email&_hsenc=p2ANqtz-82YZNoC5khh6bpE-Tar7woeiWpSm7oU855xVqO_0OgNTKEKBL5vaa7QQ_1OJ-2u5gjtr3u", "desc": "Release email including System Builder, User Dashboards, Inventory Assets page, upcoming releases and the Intelligence Prompt Library; also announcing the Intelligence webinar for 8/27 by Jay", "inv": [{"team": "CS", "role": "CS", "kind": "fyi", "label": "customer comms"}], "children": []}, {"team": "Marketing", "strategy": "Customer Enablement", "name": "Customer Email: Inventory Assets Page Update", "child": false, "start": "2026-08-19", "end": "2026-08-19", "motion": "Expansion", "channel": "Customer email", "notes": "", "type": "Milestone", "status": "", "target": "", "link": "https://hi.lasso.io/changes-to-the-inventory-page-coming-tomorrow?ecid=&utm_campaign=Product%20Enhancements&utm_source=hs_email&utm_medium=email&_hsenc=p2ANqtz-8IyEwh6rscrkk1K5sA9WNTVsOIUMAVG7My066DEv6I7-n1RdcU1Gy7E-ve1EMyODo0FJwj", "desc": "Heads up comms on Inventory page updates launching 8/20", "inv": [{"team": "CS", "role": "CS", "kind": "fyi", "label": "customer product update comms"}], "children": []}, {"team": "Sales", "strategy": "Demand Foundation", "name": "Roadshow: Kat - Miami", "child": false, "start": "2026-08-12", "end": "2026-08-13", "motion": "All Three", "channel": "Roadshow", "notes": "Dave support", "type": "Campaign", "status": "", "target": "", "link": "", "desc": "", "inv": [{"team": "Marketing", "role": "MKTG", "kind": "action", "label": "swag support"}], "children": []}, {"team": "Sales", "strategy": "Demand Foundation", "name": "Roadshow: Casey - DC", "child": false, "start": "2026-08-19", "end": "2026-08-20", "motion": "All Three", "channel": "Roadshow", "notes": "", "type": "Campaign", "status": "", "target": "", "link": "", "desc": "", "inv": [{"team": "Marketing", "role": "MKTG", "kind": "action", "label": "swag support"}], "children": []}, {"team": "Sales", "strategy": "Demand Foundation", "name": "Roadshow: Nick - Boston", "child": false, "start": "2026-08-24", "end": "2026-08-25", "motion": "All Three", "channel": "Roadshow", "notes": "Amelia also attending", "type": "Campaign", "status": "", "target": "", "link": "", "desc": "", "inv": [{"team": "Marketing", "role": "MKTG", "kind": "action", "label": "swag support"}, {"team": "CS", "role": "CS", "kind": "fyi", "label": "potential customer expansion"}], "children": []}, {"team": "Sales", "strategy": "Demand Foundation", "name": "Roadshow: Kat - Nashville", "child": false, "start": "2026-11-11", "end": "2026-11-12", "motion": "All Three", "channel": "Roadshow", "notes": "", "type": "Campaign", "status": "", "target": "", "link": "", "desc": "", "inv": [{"team": "Marketing", "role": "MKTG", "kind": "action", "label": "swag support"}, {"team": "CS", "role": "CS", "kind": "fyi", "label": "potential customer expansion"}], "children": []}, {"team": "Sales", "strategy": "Demand Foundation", "name": "Roadshow: Casey - (city/date TBD)", "child": false, "start": null, "end": null, "motion": "All Three", "channel": "Roadshow", "notes": "", "type": "Campaign", "status": "", "target": "", "link": "", "desc": "", "inv": [{"team": "Marketing", "role": "MKTG", "kind": "action", "label": "swag support"}, {"team": "CS", "role": "CS", "kind": "fyi", "label": "potential customer expansion"}], "children": []}, {"team": "Sales", "strategy": "Demand Foundation", "name": "Roadshow: Kyle - (city/date TBD)", "child": false, "start": null, "end": null, "motion": "All Three", "channel": "Roadshow", "notes": "", "type": "Campaign", "status": "", "target": "", "link": "", "desc": "", "inv": [{"team": "Marketing", "role": "MKTG", "kind": "action", "label": "swag support"}, {"team": "CS", "role": "CS", "kind": "fyi", "label": "potential customer expansion"}], "children": []}, {"team": "Sales", "strategy": "Demand Foundation", "name": "Roadshow: Nick - (city/date TBD)", "child": false, "start": null, "end": null, "motion": "All Three", "channel": "Roadshow", "notes": "", "type": "Campaign", "status": "", "target": "", "link": "", "desc": "", "inv": [{"team": "Marketing", "role": "MKTG", "kind": "action", "label": "swag support"}, {"team": "CS", "role": "CS", "kind": "fyi", "label": "potential customer expansion"}], "children": []}, {"team": "Sales", "strategy": "Shoflo Revenue Expansion", "name": "OG Shoflo Closed-Lost Re-engagement", "child": false, "start": null, "end": null, "motion": "New Business", "channel": "AI-assisted email + SDR outreach", "notes": "", "type": "Campaign", "status": "", "target": "", "link": "", "desc": "", "inv": [], "children": []}, {"team": "CS", "strategy": "Customer Enablement", "name": "Product Walkthrough: System Builder", "child": false, "start": "2026-08-20", "end": "2026-08-20", "motion": "Expansion", "channel": "Loop Session", "notes": "", "type": "Campaign", "status": "", "target": "", "link": "", "desc": "", "inv": [{"team": "Sales", "role": "AE", "kind": "fyi", "label": "Systems builder walkthrough"}], "children": []}, {"team": "CS", "strategy": "Customer Enablement", "name": "Re-enabling Customers (\"Did you know\u2026?\")", "child": false, "start": "2026-09-02", "end": "2026-09-23", "motion": "Expansion", "channel": "On-site Trainings", "notes": "", "type": "Campaign", "status": "", "target": "", "link": "", "desc": "", "inv": [], "children": []}, {"team": "CS", "strategy": "Customer Enablement", "name": "On-site Training - Georgia", "child": false, "start": "2026-09-08", "end": "2026-09-10", "motion": "Expansion", "channel": "On-site Trainings", "notes": "Britton + Illuminated Productions", "type": "Campaign", "status": "", "target": "", "link": "", "desc": "", "inv": [{"team": "Sales", "role": "AE", "kind": "fyi", "label": "on-site at Illuminated Productions 9/8 (Kat)"}], "children": []}, {"team": "CS", "strategy": "Customer Enablement", "name": "Monthly Industry Roundtable", "child": false, "start": "2026-08-27", "end": "2026-08-27", "motion": "Expansion", "channel": "Loop Session", "notes": "", "type": "Campaign", "status": "", "target": "", "link": "", "desc": "", "inv": [], "children": []}, {"team": "CS", "strategy": "Customer Enablement", "name": "Strategy Session: Pick your metrics, build your user dashboard", "child": false, "start": "2026-09-03", "end": "2026-09-03", "motion": "Expansion", "channel": "Loop Session", "notes": "", "type": "Campaign", "status": "", "target": "", "link": "", "desc": "", "inv": [{"team": "Sales", "role": "AE", "kind": "fyi", "label": "Dashboards and metrics walkthrough"}], "children": []}];
+const COLORS = {Marketing:['#FFC62F','#C79000','#FFF4D1'], Sales:['#BE6C55','#8A3A2F','#F4DDD4'], CS:['#B2B280','#6E6E45','#EFEFE2'], 'Customer Success':['#B2B280','#6E6E45','#EFEFE2']};
+const W0 = new Date('2026-07-06T00:00:00'); const NW = 26; const MS_WK = 7*864e5;
+const TODAY = new Date('2026-08-19T00:00:00');
+const STRATS = ['LASSO Intelligence Revenue','Shoflo Revenue Expansion','Territory Depth & Ownership','Platform Whitespace','New Business / Competitive Displacement','Demand Foundation','Other'];
+function stratOf(s){s=(s||'').toLowerCase();
+  if(s.includes('territory'))return STRATS[2];
+  if(s.includes('intelligence'))return STRATS[0];
+  if(s.includes('shoflo'))return STRATS[1];
+  if(s.includes('whitespace'))return STRATS[3];
+  if(s.includes('new business')||s.includes('competitive')||s.includes('displacement'))return STRATS[4];
+  if(s.includes('demand'))return STRATS[5];
+  return STRATS[6];}
+function wkIdx(d){return Math.floor((new Date(d+'T00:00:00')-W0)/MS_WK);}
+function fmt(d){if(!d)return null;const x=new Date(d+'T00:00:00');return (x.getMonth()+1)+'/'+x.getDate();}
+function effDates(c){const s=c.start||c.end,e=c.end||c.start;return [s,e];}
+function relevantTo(c,team){
+  if(team==='All')return true;
+  const t = c.team==='Customer Success'?'CS':c.team;
+  if(t===team)return true;
+  return (c.inv||[]).some(i=>i.team===team);}
+
+const tip=document.getElementById('tip');
+function showTip(e,html){tip.innerHTML=html;tip.style.opacity=1;
+  tip.style.left=Math.min(e.clientX+14,window.innerWidth-320)+'px';tip.style.top=(e.clientY+14)+'px';}
+function hideTip(){tip.style.opacity=0;}
+
+function render(team){
+  // timeline
+  const tl=document.getElementById('tl');
+  const months=[['July',7],['August',8],['September',9],['October',10],['November',11],['December',12]];
+  let mocells='';
+  months.forEach(([nm,m])=>{
+    let first=99,count=0;
+    for(let i=0;i<NW;i++){const d=new Date(W0.getTime()+i*MS_WK);if(d.getMonth()+1===m&&d.getFullYear()===2026){if(i<first)first=i;count++;}}
+    if(count)mocells+=`<div class="mo" style="grid-column:${first+1}/span ${count}">${nm}</div>`;});
+  let wkcells='';
+  for(let i=0;i<NW;i++){const d=new Date(W0.getTime()+i*MS_WK);wkcells+=`<div class="wk">${d.getMonth()+1}/${d.getDate()}</div>`;}
+  let h=`<div class="tl-head"><div class="cap">Campaign / Touchpoint</div><div><div class="months">${mocells}</div><div class="wks">${wkcells}</div></div></div>`;
+
+  const list=DATA.filter(c=>relevantTo(c,team));
+  STRATS.forEach(st=>{
+    const grp=list.filter(c=>stratOf(c.strategy)===st);
+    if(!grp.length)return;
+    h+=`<div class="strategy-band"><div class="lab">${st}</div><div></div></div>`;
+    grp.forEach(c=>{
+      h+=rowHTML(c,false);
+      (c.children||[]).forEach(ch=>{h+=rowHTML(ch,true,c.team);});
+    });
+  });
+  // playhead position
+  tl.innerHTML=h;
+  const tIdx=(TODAY-W0)/MS_WK;
+  tl.querySelectorAll('.lanes').forEach(l=>{
+    const ph=document.createElement('div');ph.className='playhead';ph.style.left=`calc(${(tIdx/NW)*100}% )`;
+    ph.classList.add('nolabel');l.appendChild(ph);});
+  // only label the first playhead
+  const phs=tl.querySelectorAll('.playhead');
+  phs.forEach((p,i)=>{if(i>0)p.style.setProperty('--x','');});
+  // remove ::after on all but first via inline style hack
+  const style=document.getElementById('phstyle')||document.createElement('style');
+  style.id='phstyle';style.textContent='.playhead:not(:first-of-type)::after{content:none}.lanes~.lanes .playhead::after{content:none}';
+  document.head.appendChild(style);
+  // hide TODAY label except first row
+  let seen=false;
+  phs.forEach(p=>{if(seen){p.style.setProperty('overflow','hidden');p.classList.add('nolab');}seen=true;});
+  const s2=document.createElement('style');s2.textContent='.playhead.nolab::after{content:none}';document.head.appendChild(s2);
+
+
+
+
+  // up next agenda — list on All, calendar grid on team tabs
+  function collectEvents(from, to){
+    const out=[];
+    list.forEach(c=>{
+      [c].concat(c.children||[]).forEach(it=>{
+        const isChild = it!==c;
+        const s = it.start||null, e = it.end||null;
+        if(!s) return;
+        const d = new Date(s+'T00:00:00');
+        const dEnd = e ? new Date(e+'T00:00:00') : d;
+        const span = e && e!==s;
+        if(d>=from && d<=to) out.push({d:d, d0:d, d1:dEnd, span, it, c, isChild, wrap:false});
+        else if(dEnd>=from && dEnd<=to && span) out.push({d:dEnd, d0:d, d1:dEnd, span:false, it, c, isChild, wrap:true});
+      });
+    });
+    out.sort((a,b)=>a.d-b.d || a.d0-b.d0);
+    return out;
+  }
+  const dows = ['SUN','MON','TUE','WED','THU','FRI','SAT'];
+  const ag = document.getElementById('agenda');
+  const hint = document.getElementById('agendaHint');
+  if(team==='All'){
+    hint.textContent = 'Launches, sends, and wraps in the next 14 days — campaigns in flight live on the timeline below';
+    const evts = collectEvents(TODAY, new Date(TODAY.getTime()+14*864e5));
+    if(!evts.length){ ag.innerHTML = '<div class="ag-empty">Nothing dated in the next 14 days for this view — check the Dates owed list.</div>'; }
+    else ag.innerHTML = evts.map(ev=>{
+      const evTeam = (ev.isChild && ev.it.team) ? ev.it.team : ev.c.team;
+      const col = COLORS[evTeam]||COLORS.Marketing;
+      const tname = evTeam==='Customer Success'?'CS':evTeam;
+      const isToday = +ev.d===+TODAY;
+      const nm = ev.it.name.replace('↳','').trim();
+      const dateLab = ev.span ? `${ev.d0.getMonth()+1}/${ev.d0.getDate()}–${ev.d1.getMonth()+1}/${ev.d1.getDate()}` : `${ev.d0.getMonth()+1}/${ev.d0.getDate()}`;
+      const dowLab = ev.span ? 'SPAN' : dows[ev.d0.getDay()];
+      const what = ev.isChild ? `<b>${nm}</b> <span class="of">· ${ev.c.name}</span>${ev.wrap?' <span class="of">wraps</span>':''}` : `<b>${nm}</b>${ev.wrap?' <span class="of">wraps</span>':(ev.span?'':' <span class="of">launches</span>')}`;
+      const roleChips = !ev.isChild ? (ev.c.inv||[]).filter(i=>i.kind==='action').map(i=>`<span class="ag-act">${i.role||i.team.toUpperCase()} · ACTION</span>`).join('') : ((ev.it.inv&&ev.it.inv.length) ? ev.it.inv.filter(i=>i.kind==='action').map(i=>`<span class="ag-act">${i.role} · ACTION</span>`).join('') : (/sdr/i.test(nm) ? '<span class="ag-act">SDR · ACTION</span>' : (/ae|account exec/i.test(nm) ? '<span class="ag-act">AE · ACTION</span>' : (/csm/i.test(nm) ? '<span class="ag-act">CSM · ACTION</span>' : ''))));
+      return `<div class="ag-row${isToday?' today-row':''}">
+        <span class="ag-date">${dateLab}<span class="dow">${dowLab}${isToday?' · TODAY':''}</span></span>
+        <span class="ag-what">${what}</span>
+        <span class="ag-tags">${roleChips}<span class="ag-team" style="background:${col[2]};color:${col[1]}">${tname.toUpperCase()}</span></span>
+      </div>`;}).join('');
+  } else {
+    hint.textContent = 'Your two weeks at a glance — today outlined, dark chips need action';
+    const dowIdx = (TODAY.getDay()+6)%7;
+    const mon = new Date(TODAY.getTime()-dowIdx*864e5);
+    const evts = collectEvents(mon, new Date(mon.getTime()+13*864e5));
+    const byDay = {};
+    evts.forEach(ev=>{const k=ev.d.toISOString().slice(0,10);(byDay[k]=byDay[k]||[]).push(ev);});
+    let g = '<div class="cal-grid">';
+    ['MON','TUE','WED','THU','FRI','SAT','SUN'].forEach(dd=>g+=`<div class="cal-dow">${dd}</div>`);
+    for(let i=0;i<14;i++){
+      const d = new Date(mon.getTime()+i*864e5);
+      const k = d.toISOString().slice(0,10);
+      const isToday = +d===+TODAY; const past = d<TODAY;
+      const chips = (byDay[k]||[]).map(ev=>{
+        const evTeam = (ev.isChild && ev.it.team) ? ev.it.team : ev.c.team;
+        const col = COLORS[evTeam]||COLORS.Marketing;
+        const nm = ev.it.name.replace('↳','').trim();
+        const isAct = ev.isChild && /sdr|ae|csm|outreach/i.test(nm);
+        const label = ev.isChild ? nm : nm + (ev.wrap?' wraps':' launches');
+        const sub = ev.isChild ? ev.c.name : '';
+        const spanLab = ev.span ? ` →${ev.d1.getMonth()+1}/${ev.d1.getDate()}` : '';
+        return `<div class="cal-chip${isAct?' act':''}" style="${isAct?'':'border-left:3px solid '+col[0]}" title="${label}${sub?' · '+sub:''}">${label}${spanLab}${sub?`<span class="cal-sub">${sub}</span>`:''}</div>`;
+      }).join('');
+      g += `<div class="cal-day${isToday?' cal-today':''}${past?' cal-past':''}"><span class="cal-num">${d.getMonth()+1}/${d.getDate()}${isToday?' · TODAY':''}</span>${chips}</div>`;
+    }
+    g += '</div>';
+    ag.innerHTML = g;
+  }
+
+  // flags
+  const und=list.filter(c=>!c.start&&!c.end);
+  const fl=document.getElementById('flags');
+  if(und.length){fl.style.display='block';
+    fl.innerHTML=`<h3>Dates owed · ${und.length}</h3><div class="items">`+
+      und.map(c=>`<span class="fpill"><b>${c.name}</b> — ${c.team}</span>`).join('')+`</div>`;}
+  else fl.style.display='none';
+
+  // cards
+  const cards=document.getElementById('cards');
+  cards.innerHTML=list.map(c=>cardHTML(c,team)).join('');
+  // hover + tap tooltips, document-wide
+  document.querySelectorAll('[data-tip]').forEach(el=>{
+    el.addEventListener('mousemove',e=>showTip(e,el.dataset.tip));
+    el.addEventListener('mouseleave',hideTip);
+    el.addEventListener('click',e=>{e.stopPropagation();showTip(e,el.dataset.tip);});
+  });
+}
+
+function rowHTML(c,isChild,parentTeam){
+  const team=c.team||parentTeam;
+  const col=(COLORS[team]||COLORS.Marketing);
+  const [s,e]=effDates(c);
+  let lane='';
+  for(let i=0;i<NW;i++)lane+='<div class="cell"></div>';
+  const tipTxt=`<b>${c.name.replace('↳','').trim()}</b><br>${s?fmt(s):'TBD'}${e&&e!==s?' → '+fmt(e):''}${c.channel?'<br>'+c.channel:''}${c.notes?'<br><i>'+c.notes+'</i>':''}`;
+  if(s){
+    const i0=Math.max(0,wkIdx(s)), i1=Math.min(NW-1,Math.max(i0,wkIdx(e)));
+    if(c.type==='Milestone'){
+      lane+=`<div class="dia" data-tip="${esc(tipTxt)}" style="left:calc(${(i0/NW)*100}% + 8px);background:${col[1]}"></div>`;
+    } else {
+      const wpct=((i1-i0+1)/NW)*100;
+      const label=(i1-i0)>=2?`<span class="tag">${fmt(s)}${e&&e!==s?'–'+fmt(e):''}</span>`:'';
+      lane+=`<div class="bar" data-tip="${esc(tipTxt)}" style="left:${(i0/NW)*100}%;width:calc(${wpct}% - 4px);background:${col[isChild?2:0]}">${label}</div>`;
+    }
+  } else if(!isChild){
+    lane+=`<div class="tbd-pill">DATES TBD</div>`;
+  }
+  const descAttr = (!isChild && c.desc) ? ` data-tip="${esc('<b>'+c.name+'</b><br>'+c.desc)}" style="cursor:help"` : '';
+  return `<div class="row${isChild?' child':''}"><div class="name"${descAttr}>${isChild?'':`<span class="tm" style="background:${col[0]}"></span>`}${c.name.replace('↳','↳ ').trim()}${(!isChild && c.desc)?'<span class="name-i">ⓘ</span>':''}</div><div class="lanes">${lane}</div></div>`;
+}
+
+function cardHTML(c,team){
+  const col=COLORS[c.team]||COLORS.Marketing;
+  const [s,e]=effDates(c);
+  const tname=c.team==='Customer Success'?'CS':c.team;
+  const tps=(c.children||[]).map(ch=>{
+    const [cs]=effDates(ch);
+    return `<div class="tp"><span class="d" style="background:${col[1]}"></span>${ch.name.replace('↳','').trim()}<span class="when">${cs?fmt(cs):'TBD'}</span></div>`;}).join('');
+  const invs=(c.inv||[]).map(i=>`<span class="inv ${i.kind}"><span class="who">${(i.role||i.team).toUpperCase()}${i.kind==='action'?' · ACTION':' · FYI'}</span>${i.label}</span>`).join('');
+  return `<div class="card" style="border-left-color:${col[0]}">
+    <div class="top"><h4>${c.name}${c.desc?` <span class="info" data-tip="${esc(c.desc)}">ⓘ</span>`:''}</h4><span class="badge-group"><span class="badge" style="background:${col[2]};color:${col[1]}">${tname.toUpperCase()}</span>${c.status?`<span class="status-pill">${c.status.toUpperCase()}</span>`:''}</span></div>
+    <div class="meta"><span><b>${s?fmt(s):'TBD'}${e&&e!==s?' → '+fmt(e):''}</b></span>${c.channel?`<span>${c.channel}</span>`:''}${c.motion?`<span class="motion">[${c.motion}]</span>`:''}</div>
+    ${c.notes?`<div class="notes">${c.notes}</div>`:''}
+    ${tps?`<div class="tps">${tps}</div>`:''}
+    ${invs?`<div class="invs">${invs}</div>`:''}
+    <div class="foot"><span></span>
+    ${c.link?`<a class="brief" href="${c.link}" target="_blank">Open brief →</a>`:`<span class="brief none">No brief linked</span>`}</div>
+  </div>`;
+}
+function esc(s){return s.replace(/"/g,'&quot;');}
+
+document.querySelectorAll('.chip').forEach(ch=>ch.addEventListener('click',()=>{
+  document.querySelectorAll('.chip').forEach(x=>x.classList.remove('on'));
+  ch.classList.add('on');render(ch.dataset.team);}));
+render('All');
+</script>
+</body>
+</html>
